@@ -1,11 +1,12 @@
 import DefaultRenderer from './src/components/DefaultRenderer';
+import CreditCardComponentsRenderer from './src/components/CreditCardComponentsRenderer';
 
 export default {
   mollie_methods_applepay: DefaultRenderer,
   mollie_methods_bancontact: DefaultRenderer,
   mollie_methods_banktransfer: DefaultRenderer,
   mollie_methods_belfius: DefaultRenderer,
-  mollie_methods_creditcard: DefaultRenderer,
+  mollie_methods_creditcard: CreditCardComponentsRenderer,
   mollie_methods_directdebit: DefaultRenderer,
   mollie_methods_eps: DefaultRenderer,
   mollie_methods_giftcard: DefaultRenderer,

@@ -18,8 +18,6 @@ export default function useMollieIssuers() {
           paymentCode: methodCode,
         });
 
-        setCartInfo(cartResponse);
-
         return cartResponse.mollie_available_issuers;
       } catch (error) {
         setErrorMessage(__('Error while setting the payment method'));

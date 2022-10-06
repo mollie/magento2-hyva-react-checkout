@@ -4,9 +4,9 @@ Open the package.json file and add the following line:
 
 ```json
 "config": {
-    "paymentMethodsRepo": {
-      "mollie": "git@github.com:mollie/magento2-hyva-react-checkout.git"
-    }
+  "paymentMethodsRepo": {
+    "mollie": "git@github.com:mollie/magento2-hyva-react-checkout.git"
+  }
 },
 ```
 

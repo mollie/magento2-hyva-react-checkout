@@ -9,13 +9,14 @@ export default function useMolliePlaceOrder({ methodCode, selectedIssuer }) {
   const { cartId, setCartInfo } = useMollieCartContext();
   const { setPageLoader, setErrorMessage, appDispatch } = useMollieAppContext();
 
-  const placeOrder = async () => {
+  const placeOrder = async ({ token = null }) => {
     try {
       setPageLoader(true);
       await setPaymentMethodOnCartRequest(appDispatch, {
         cartId,
         paymentCode: methodCode,
         issuer: selectedIssuer,
+        cardToken: token,
       });
     } catch (error) {
       setPageLoader(false);
@@ -43,7 +44,22 @@ export default function useMolliePlaceOrder({ methodCode, selectedIssuer }) {
     }
   };
 
+  const placeOrderWithToken = async (mollie) => {
+    setPageLoader(true);
+
+    const { token, error } = await mollie.createToken();
+
+    if (error) {
+      setPageLoader(false);
+      setErrorMessage(error.message);
+      return;
+    }
+
+    await placeOrder({ token });
+  };
+
   return {
     placeOrder,
+    placeOrderWithToken,
   };
 }

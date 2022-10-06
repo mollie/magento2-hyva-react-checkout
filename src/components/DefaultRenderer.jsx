@@ -35,7 +35,7 @@ function DefaultRenderer({ method, selected, actions }) {
     getIssuers();
   }, [isSelected, method.code]);
 
-  if (!isSelected) {
+  if (!isSelected || !issuers) {
     return (
       <RadioInput
         value={method.code}
