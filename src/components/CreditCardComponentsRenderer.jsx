@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { shape, func } from 'prop-types';
 import { __ } from '../../../../i18n';
 import { paymentMethodShape } from '../../../../utils/payment';
@@ -7,31 +7,40 @@ import usePaymentMethodFormContext from '../../../../components/paymentMethod/ho
 import RadioInput from '../../../../components/common/Form/RadioInput';
 import { useComponents, profileId } from '../utility/config';
 import useMolliePlaceOrder from '../hooks/useMolliePlaceOrder';
-import useMollieComponentsApi from '../hooks/useMollieComponentsApi';
 import MollieComponent from './MollieComponent';
 
 function CreditCardComponentsRenderer({ method, selected, actions }) {
   const isSelected = method.code === selected.code;
-  const [mollie, setMollie] = useState();
-  useMollieComponentsApi(setMollie);
-
   const { registerPaymentAction } = useCheckoutFormContext();
   const { submitHandler } = usePaymentMethodFormContext();
-  const { placeOrderWithToken } = useMolliePlaceOrder({
+  const submitHandlerCallback = useCallback(submitHandler, [submitHandler]);
+  const { mollie, placeOrderWithToken } = useMolliePlaceOrder({
     methodCode: method.code,
     selectedIssuer: null,
   });
 
   useEffect(() => {
-    registerPaymentAction(method.code, (...args) => {
-      placeOrderWithToken(mollie, ...args);
-    });
-  }, [method.code, mollie]);
+    if (!isSelected || !mollie) {
+      return;
+    }
+
+    registerPaymentAction(method.code, placeOrderWithToken);
+  }, [
+    registerPaymentAction,
+    placeOrderWithToken,
+    isSelected,
+    method.code,
+    mollie,
+  ]);
 
   useEffect(() => {
+    if (!isSelected) {
+      return;
+    }
+
     // Mark this method as selected
-    submitHandler(method.code);
-  }, [isSelected]);
+    submitHandlerCallback(method.code);
+  }, [method.code, isSelected]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isSelected || !useComponents || !profileId || !mollie) {
     return (

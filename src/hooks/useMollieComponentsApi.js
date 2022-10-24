@@ -1,12 +1,22 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { locale, profileId, testmode } from '../utility/config';
 
-const useMollieComponentsApi = (callback) => {
-  let molliePromise;
+const useMollieComponentsApi = (methodCode, callback) => {
   const [mollie, setMollie] = useState();
-  const mollieCallback = useCallback(callback, []);
+  const mollieCallback = useCallback(callback, [callback]);
 
   useEffect(() => {
+    let molliePromise;
+
+    if (
+      typeof profileId === 'undefined' ||
+      typeof locale === 'undefined' ||
+      typeof testmode === 'undefined' ||
+      methodCode !== 'mollie_methods_creditcard'
+    ) {
+      return;
+    }
+
     if (!molliePromise) {
       molliePromise = new Promise((resolve) => {
         const script = document.createElement('script');
@@ -21,13 +31,13 @@ const useMollieComponentsApi = (callback) => {
     }
 
     molliePromise.then(setMollie);
-  }, []);
+  }, [methodCode]);
 
   useEffect(() => {
     if (mollie) {
       mollieCallback(mollie);
     }
-  }, [mollie]);
+  }, [mollieCallback, mollie]);
 };
 
 export default useMollieComponentsApi;
