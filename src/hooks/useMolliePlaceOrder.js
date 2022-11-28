@@ -6,6 +6,8 @@ import useMollieCartContext from './useMollieCartContext';
 import placeOrderRequest from '../api/placeOrderRequest';
 import restoreCartRequest from '../api/restoreCartRequest';
 import useMollieComponentsApi from './useMollieComponentsApi';
+import LocalStorage from '../../../../utils/localStorage';
+import { config } from '../../../../config';
 
 export default function useMolliePlaceOrder({ methodCode, selectedIssuer }) {
   const { cartId, setCartInfo } = useMollieCartContext();
@@ -14,7 +16,7 @@ export default function useMolliePlaceOrder({ methodCode, selectedIssuer }) {
   useMollieComponentsApi(methodCode, setMollie);
 
   const placeOrder = useCallback(
-    async ({ token = null }) => {
+    async ({ token = null, applePayToken = null }) => {
       try {
         setPageLoader(true);
         await setPaymentMethodOnCartRequest(appDispatch, {
@@ -22,6 +24,7 @@ export default function useMolliePlaceOrder({ methodCode, selectedIssuer }) {
           paymentCode: methodCode,
           issuer: selectedIssuer,
           cardToken: token,
+          applePayToken,
         });
       } catch (error) {
         setPageLoader(false);
@@ -35,6 +38,15 @@ export default function useMolliePlaceOrder({ methodCode, selectedIssuer }) {
       try {
         const { mollie_redirect_url: mollieRedirectUrl } =
           await placeOrderRequest(appDispatch);
+
+        if (
+          !mollieRedirectUrl &&
+          (methodCode === 'mollie_methods_applepay' ||
+            methodCode === 'mollie_methods_creditcard')
+        ) {
+          LocalStorage.clearCheckoutStorage();
+          window.location.replace(config.successPageRedirectUrl);
+        }
 
         if (!mollieRedirectUrl) {
           throw Error('No redirect url found');
