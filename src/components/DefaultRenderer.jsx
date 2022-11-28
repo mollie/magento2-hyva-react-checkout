@@ -10,7 +10,7 @@ import Issuer from './Issuer';
 function DefaultRenderer({ method, selected, actions }) {
   const isSelected = method.code === selected.code;
 
-  const [issuers, setIssuers] = useState([]);
+  const [issuers, setIssuers] = useState(false);
   const { getMollieIssuers, selectedIssuer, setSelectedIssuer } =
     useMollieIssuers();
   const { registerPaymentAction } = useCheckoutFormContext();
@@ -20,11 +20,16 @@ function DefaultRenderer({ method, selected, actions }) {
   });
 
   useEffect(() => {
+    if (!isSelected) {
+      return;
+    }
+
     registerPaymentAction(method.code, placeOrder);
-  }, [method.code, selectedIssuer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [placeOrder, isSelected, method.code, selectedIssuer]);
 
   useEffect(() => {
-    if (!isSelected) {
+    if (issuers !== false || !isSelected) {
       return;
     }
 
@@ -33,7 +38,7 @@ function DefaultRenderer({ method, selected, actions }) {
     }
 
     getIssuers();
-  }, [isSelected, method.code]);
+  }, [isSelected, issuers]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isSelected || !issuers) {
     return (

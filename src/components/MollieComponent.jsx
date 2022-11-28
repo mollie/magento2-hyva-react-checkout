@@ -27,15 +27,19 @@ function MollieComponent({ mollie, type, label }) {
         componentObject.unmount();
       }
     };
-  }, [componentObject]);
+  }, [mollie, componentObject]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
       <label className="label" htmlFor={type}>
         {label}
       </label>
-      <div className="form-input" ref={reference} />
-      {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+      <div className="form-input p-2" ref={reference} />
+      {errorMessage && (
+        <div className="pb-2" style={{ color: 'rgb(239, 68, 68)' }}>
+          {errorMessage}
+        </div>
+      )}
       <div id="card-holder-error" />
     </div>
   );
