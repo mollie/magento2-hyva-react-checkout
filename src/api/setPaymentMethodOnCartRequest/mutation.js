@@ -10,6 +10,7 @@ export const SET_PAYMENT_METHOD_ON_CART = `
         $paymentCode: String!
         $issuer: String,
         $cardToken: String
+        $applePayToken: String
     ) {
       setPaymentMethodOnCart(
         input: {
@@ -17,7 +18,8 @@ export const SET_PAYMENT_METHOD_ON_CART = `
           payment_method: {
             code: $paymentCode
             mollie_selected_issuer: $issuer,
-            mollie_card_token: $cardToken
+            mollie_card_token: $cardToken,
+              mollie_applepay_payment_token: $applePayToken
           }
         }
       ) {
