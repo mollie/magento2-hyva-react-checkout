@@ -1,8 +1,11 @@
+import { applePayType } from './src/utility/config';
 import DefaultRenderer from './src/components/DefaultRenderer';
+import ApplePayRenderer from './src/components/ApplePayRenderer';
 import CreditCardComponentsRenderer from './src/components/CreditCardComponentsRenderer';
 
 export default {
-  mollie_methods_applepay: DefaultRenderer,
+  mollie_methods_applepay:
+    applePayType === 'direct' ? ApplePayRenderer : DefaultRenderer,
   mollie_methods_bancontact: DefaultRenderer,
   mollie_methods_banktransfer: DefaultRenderer,
   mollie_methods_belfius: DefaultRenderer,
