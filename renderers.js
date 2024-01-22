@@ -26,4 +26,5 @@ export default {
   mollie_methods_paysafecard: DefaultRenderer,
   mollie_methods_przelewy24: DefaultRenderer,
   mollie_methods_sofort: DefaultRenderer,
+  mollie_methods_twint: DefaultRenderer,
 };
