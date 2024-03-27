@@ -14,6 +14,7 @@ export default {
   mollie_methods_bancontact: DefaultRenderer,
   mollie_methods_banktransfer: DefaultRenderer,
   mollie_methods_belfius: DefaultRenderer,
+  mollie_methods_blik: DefaultRenderer,
   mollie_methods_creditcard: creditcardRenderer,
   mollie_methods_directdebit: DefaultRenderer,
   mollie_methods_eps: DefaultRenderer,
